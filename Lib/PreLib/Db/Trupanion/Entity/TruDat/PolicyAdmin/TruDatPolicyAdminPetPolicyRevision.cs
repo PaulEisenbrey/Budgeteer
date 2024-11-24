@@ -1,0 +1,60 @@
+﻿namespace Database.Trupanion.Entity.TruDat.PolicyAdmin;
+
+public class TruDatPolicyAdminPetPolicyRevision
+{
+    public Guid Id { get; set; }
+    public DateTime CreatedOn { get; set; }
+    public Guid CreatedBy { get; set; }
+    public Guid? CreatedOnBehalfOf { get; set; }
+    public DateTime ModifiedOn { get; set; }
+    public Guid ModifiedBy { get; set; }
+    public Guid? ModifiedOnBehalfOf { get; set; }
+    public DateTime ApplicationDate { get; set; }
+    public bool IsApplied { get; set; }
+    public int RevisionNumber { get; set; }
+    public string? RevisionReason { get; set; }
+    public Guid PetPolicyId { get; set; }
+    public DateTime CoverageEffectiveFrom { get; set; }
+    public string? PolicyNumber { get; set; }
+    public DateTime? CancellationDate { get; set; }
+    public Guid? CancellationReasonId { get; set; }
+    public Guid StatusId { get; set; }
+    public decimal? Deductible { get; set; }
+    public decimal? CoinsurancePercentage { get; set; }
+    public Guid? PrimaryHospitalId { get; set; }
+    public string? DecPageDocumentId { get; set; }
+    public string? OptionalEndorsements { get; set; }
+    public string? Fees { get; set; }
+    public bool HasWaiveWaitingPeriodEndorsement { get; set; }
+    public string? WaitingPeriodOverride { get; set; }
+    public Guid PetId { get; set; }
+    public string? PetName { get; set; }
+    public DateTime? DateOfBirth { get; set; }
+    public string? PolicyholderPostalCode { get; set; }
+    public string? PolicyholderStateCode { get; set; }
+    public string? PolicyholderIsoAlpha3CountryCode { get; set; }
+    public string? Characteristics { get; set; }
+    public string? TagNumber { get; set; }
+    public Guid PlanId { get; set; }
+    public DateTime? PriceTermStartDate { get; set; }
+    public DateTime PolicyTermStartDate { get; set; }
+    public string? LanguagePreference { get; set; }
+    public DateTime PolicyDate { get; set; }
+    public decimal? Premium { get; set; }
+    public string? PremiumCalculationProof { get; set; }
+    public DateTime? PremiumEffectiveDate { get; set; }
+    public decimal? PremiumTaxAmount { get; set; }
+    public Guid? PremiumCalculationId { get; set; }
+    public string? PremiumCalculationNeighborhoodName { get; set; }
+    public string? PremiumCalculationRegionName { get; set; }
+    public string? TaxItems { get; set; }
+    public DateTime? PriceTermExpirationDate { get; set; }
+    public DateTime? PriceTermNotificationDate { get; set; }
+    public DateTime? PolicyTermExpirationDate { get; set; }
+    public DateTime? PolicyTermNotificationDate { get; set; }
+    public DateTime? PremiumFrozenUntil { get; set; }
+    public DateTime? NextNotificationDate { get; set; }
+    public bool IsCancelled { get; set; }
+    public decimal? DefaultCertificateConversionPremium { get; set; }
+    public DateTime? SignupDate { get; set; }
+}
