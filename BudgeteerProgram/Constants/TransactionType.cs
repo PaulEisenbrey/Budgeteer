@@ -11,5 +11,6 @@
         checkDeposit = 6,
         wireDeposit = 7,
         fee = 8,
+        outofrange
     }
 }
