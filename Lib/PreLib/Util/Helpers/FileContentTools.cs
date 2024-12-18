@@ -51,69 +51,87 @@ public static class FileContentTools
                     case ".avi":
                         mimeType = "video/x-msvideo";
                         break;
+
                     case ".bmp":
                         mimeType = FileContentTools.MimeTypes.ImageBmp;
                         break;
+
                     case ".rtf":
                     case ".dot":
                     case ".doc":
                     case ".docx":
                         mimeType = "application/msword";
                         break;
+
                     case ".xlm":
                     case ".xls":
                     case ".xlsx":
                         mimeType = "application/vnd.ms-excel";
                         break;
+
                     case ".ppt":
                     case ".pptx":
                         mimeType = "application/vnd.ms-powerpoint";
                         break;
+
                     case ".msg":
                         mimeType = "application/vnd.ms-outlook";
                         break;
+
                     case ".png":
                         mimeType = FileContentTools.MimeTypes.ImagePng;
                         break;
+
                     case ".pdf":
                         mimeType = FileContentTools.MimeTypes.AppPdf;
                         break;
+
                     case ".jpe":
                     case ".jpg":
                     case ".jpeg":
                         mimeType = FileContentTools.MimeTypes.ImageJpeg;
                         break;
+
                     case ".tif":
                     case ".tiff":
                         mimeType = FileContentTools.MimeTypes.ImageTiff;
                         break;
+
                     case ".gif":
                         mimeType = FileContentTools.MimeTypes.ImageGif;
                         break;
+
                     case ".zip":
                         mimeType = FileContentTools.MimeTypes.AppZip;
                         break;
+
                     case ".eml":
                         mimeType = FileContentTools.MimeTypes.MessageRfc822;
                         break;
+
                     case ".html":
                     case ".htm":
                         mimeType = FileContentTools.MimeTypes.TextHtml;
                         break;
+
                     case ".txt":
                         mimeType = FileContentTools.MimeTypes.TextPlain;
                         break;
+
                     case ".xml":
                         mimeType = FileContentTools.MimeTypes.AppXml;
                         break;
+
                     case ".json.txt":
                     case ".json":
                         mimeType = FileContentTools.MimeTypes.AppJson;
                         break;
+
                     case ".bson.bin":
                     case ".bson":
                         mimeType = FileContentTools.MimeTypes.AppBson;
                         break;
+
                     default:
                         mimeType = FileContentTools.MimeTypes.AppUnknown;
                         break;
@@ -124,7 +142,7 @@ public static class FileContentTools
             {
                 mimeTypes.TryAdd(fileExtension, mimeType);
             }
-            
+
 #pragma warning restore CA1416 // Validate platform compatibility
         }
 
@@ -137,24 +155,34 @@ public static class FileContentTools
         {
             case FileContentTools.MimeTypes.AppPdf:
                 return ".pdf";
+
             case FileContentTools.MimeTypes.AppZip:
                 return ".zip";
+
             case FileContentTools.MimeTypes.ImageTiff:
                 return ".tif";
+
             case FileContentTools.MimeTypes.ImagePng:
                 return ".png";
+
             case FileContentTools.MimeTypes.ImageJpeg:
                 return ".jpg";
+
             case FileContentTools.MimeTypes.ImageGif:
                 return ".gif";
+
             case FileContentTools.MimeTypes.ImageBmp:
                 return ".bmp";
+
             case FileContentTools.MimeTypes.TextPlain:
                 return ".txt";
+
             case FileContentTools.MimeTypes.TextHtml:
                 return ".html";
+
             case FileContentTools.MimeTypes.AppJson:
                 return ".json";
+
             case FileContentTools.MimeTypes.AppBson:
                 return ".bson";
                 // TODO: need to support other formats
@@ -166,7 +194,7 @@ public static class FileContentTools
 
     public static string GetImageFormatMimeContentType(byte[] bytes)
     {
-        // see http://www.mikekunz.com/image_file_header.html  
+        // see http://www.mikekunz.com/image_file_header.html
         byte[] bmp = Encoding.ASCII.GetBytes("BM");         // BMP
         byte[] gif = Encoding.ASCII.GetBytes("GIF");        // GIF
         byte[] png = new byte[] { 137, 80, 78, 71 };        // PNG

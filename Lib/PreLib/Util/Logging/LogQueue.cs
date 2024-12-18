@@ -25,7 +25,7 @@ public class LogQueue
         lock (locker)
         {
             var retItem = new LogQueueItem();
-            if(this.queue.TryDequeue(out retItem))
+            if (this.queue.TryDequeue(out retItem))
             {
                 return retItem;
             }

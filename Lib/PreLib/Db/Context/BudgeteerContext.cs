@@ -7,57 +7,41 @@ namespace Database.Context;
 
 public partial class BudgeteerContext : DbContext
 {
+    public BudgeteerContext()
+    {
+    }
+
     public BudgeteerContext(DbContextOptions<BudgeteerContext> options)
         : base(options)
     {
     }
 
-    public virtual DbSet<AccountAprlookup> AccountAprlookups { get; set; } = default!;
+    public virtual DbSet<AccountDatum> AccountData => Set<AccountDatum>();
 
-    public virtual DbSet<AccountDatum> AccountData { get; set; } = default!;
+    public virtual DbSet<AccountType> AccountTypes => Set<AccountType>();
 
-    public virtual DbSet<AccountType> AccountTypes { get; set; } = default!;
+    public virtual DbSet<Address> Addresses => Set<Address>();
 
-    public virtual DbSet<Address> Addresses { get; set; } = default!;
+    public virtual DbSet<AnnualPercentageRate> AnnualPercentageRates => Set<AnnualPercentageRate>();
 
-    public virtual DbSet<AnnualPercentageRate> AnnualPercentageRates { get; set; } = default!;
+    public virtual DbSet<BudgetCategory> BudgetCategories => Set<BudgetCategory>();
 
-    public virtual DbSet<Institution> Institutions { get; set; } = default!;
+    public virtual DbSet<Institution> Institutions => Set<Institution>();
 
-    public virtual DbSet<InstitutionAccountsLookup> InstitutionAccountsLookups { get; set; } = default!;
+    public virtual DbSet<BtTransaction> Transactions => Set<BtTransaction>();
 
-    public virtual DbSet<Transaction> Transactions { get; set; } = default!;
-
-    public virtual DbSet<TransactionType> TransactionTypes { get; set; } = default!;
+    public virtual DbSet<TransactionType> TransactionTypes => Set<TransactionType>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseSqlServer(ConnectionString.ConstructConnectionString(SqlDatabase.budgeteer), options => options.EnableRetryOnFailure().CommandTimeout(60));
-        }
-    }
+        => optionsBuilder.UseSqlServer(ConnectionString.ConstructConnectionString(SqlDatabase.budgeteer), options => options.EnableRetryOnFailure().CommandTimeout(60));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AccountAprlookup>(entity =>
-        {
-            entity.ToTable("AccountAPRLookup", "Budget");
-
-            entity.HasOne(d => d.AccountData).WithMany(p => p.AccountAprlookups)
-                .HasForeignKey(d => d.AccountDataId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AccountAPRLookup_AccountData");
-
-            entity.HasOne(d => d.AnnualPercentageRate).WithMany(p => p.AccountAprlookups)
-                .HasForeignKey(d => d.AnnualPercentageRateId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AccountAPRLookup_AnnualPercentageRate");
-        });
-
         modelBuilder.Entity<AccountDatum>(entity =>
         {
             entity.ToTable("AccountData", "Budget");
+
+            entity.HasIndex(e => e.AccountUniqueId, "UQ_AccountData_AccountUniqueId").IsUnique();
 
             entity.Property(e => e.AccountNumber).HasMaxLength(100);
             entity.Property(e => e.InitialBalance).HasColumnType("decimal(18, 2)");
@@ -72,6 +56,11 @@ public partial class BudgeteerContext : DbContext
                 .HasForeignKey(d => d.AccountTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_AccountData_AccountType");
+
+            entity.HasOne(d => d.Institution).WithMany(p => p.AccountData)
+                .HasForeignKey(d => d.InstitutionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AccountData_Institution");
         });
 
         modelBuilder.Entity<AccountType>(entity =>
@@ -105,6 +94,22 @@ public partial class BudgeteerContext : DbContext
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("APR");
             entity.Property(e => e.EffectiveDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.AccountDatum).WithMany(p => p.AnnualPercentageRates)
+                .HasForeignKey(d => d.AccountDatumId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AnnualPercentageRate_AccountDatum");
+        });
+
+        modelBuilder.Entity<BudgetCategory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_BudgetCategoriesR");
+
+            entity.ToTable("BudgetCategories", "Budget");
+
+            entity.Property(e => e.Description)
+                .IsRequired()
+                .HasMaxLength(100);
         });
 
         modelBuilder.Entity<Institution>(entity =>
@@ -121,28 +126,20 @@ public partial class BudgeteerContext : DbContext
                 .HasConstraintName("FK_Institution_Address");
         });
 
-        modelBuilder.Entity<InstitutionAccountsLookup>(entity =>
-        {
-            entity.ToTable("InstitutionAccountsLookup", "Budget");
-
-            entity.HasOne(d => d.AccountData).WithMany(p => p.InstitutionAccountsLookups)
-                .HasForeignKey(d => d.AccountDataId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AccountData_Lookup");
-
-            entity.HasOne(d => d.Institution).WithMany(p => p.InstitutionAccountsLookups)
-                .HasForeignKey(d => d.InstitutionId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Institution_Lookup");
-        });
-
-        modelBuilder.Entity<Transaction>(entity =>
+        modelBuilder.Entity<BtTransaction>(entity =>
         {
             entity.ToTable("Transaction", "Budget");
+
+            entity.HasIndex(e => e.TransactionId, "UQ_Transaction_TransactionId").IsUnique();
 
             entity.Property(e => e.CheckNumber).HasMaxLength(100);
             entity.Property(e => e.TransactionAmount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.TransactionDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.AccountDatum).WithMany(p => p.btTransactions)
+                .HasForeignKey(d => d.AccountDatumId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Transaction_AccountDatum");
 
             entity.HasOne(d => d.TransactionType).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.TransactionTypeId)

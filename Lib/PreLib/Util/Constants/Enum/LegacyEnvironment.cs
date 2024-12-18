@@ -8,10 +8,13 @@ public enum LegacyEnvironment
 
     [Description("Dev")]
     dev,
+
     [Description("Development")]
     development,
+
     [Description("Test")]
     test,
+
     [Description("Production")]
     production,
 

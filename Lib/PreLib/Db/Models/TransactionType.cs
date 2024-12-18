@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Utilities.EntityBaseClasses;
+﻿namespace Database.Models;
 
-namespace Database.Models;
-
-public partial class TransactionType : EntityIntId
+public partial class TransactionType
 {
+    public int Id { get; set; }
+
     public string Description { get; set; } = string.Empty;
 
-    public virtual List<Transaction> Transactions { get; set; } = new();
+    public virtual List<BtTransaction> Transactions { get; set; } = new();
 }

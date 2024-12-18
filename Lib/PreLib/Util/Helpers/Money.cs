@@ -1,6 +1,4 @@
-﻿using Utilities.ArgumentEvaluation;
-
-namespace Utilities.Helpers;
+﻿namespace Utilities.Helpers;
 
 public class Money : ValueObject<Money>
 {
@@ -29,11 +27,11 @@ public class Money : ValueObject<Money>
     public static Money operator +(Money money1, decimal money2) =>
         new Money(money1.Amount + money2, money1.CurrencyValue);
 
-    public static Money Create(decimal amount, string isoCurrencySymbol) => 
+    public static Money Create(decimal amount, string isoCurrencySymbol) =>
         new Money(amount, isoCurrencySymbol);
 
     public static Money Create(decimal amount, Currency currency) => new Money(amount, currency);
 
-    public MoneySerializable ToMoneySerializable() => 
+    public MoneySerializable ToMoneySerializable() =>
         new MoneySerializable(Amount, CurrencyValue.IsoCurrencySymbol);
 }

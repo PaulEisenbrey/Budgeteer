@@ -3,6 +3,7 @@ using Utilities.Constants.Enum;
 using Utilities.IoCInterfaces;
 using Utilities.Logging;
 using Utilities.Tools.Interfaces;
+
 namespace Database.Tools;
 
 public class RotatingRiderB : RotatingValueBase<bool>, IRotatingValue<bool>, IRotatingRiderB, ISingletonSvc

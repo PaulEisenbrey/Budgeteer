@@ -1,9 +1,11 @@
-﻿using Utilities.EntityBaseClasses;
+﻿namespace Database.Models;
 
-namespace Database.Models;
-
-public partial class AccountDatum : EntityIntId
+public partial class AccountDatum
 {
+    public int Id { get; set; }
+
+    public int InstitutionId { get; set; }
+
     public DateTime OpenDate { get; set; }
 
     public int AccountTypeId { get; set; }
@@ -16,11 +18,15 @@ public partial class AccountDatum : EntityIntId
 
     public string RoutingNumber { get; set; } = string.Empty;
 
-    public decimal InitialBalance { get; set; } = 0.0m;
+    public decimal InitialBalance { get; set; }
 
-    public virtual ICollection<AccountAprlookup> AccountAprlookups { get; set; } = new List<AccountAprlookup>();
+    public Guid AccountUniqueId { get; set; }
 
     public virtual AccountType AccountType { get; set; } = new();
 
-    public virtual ICollection<InstitutionAccountsLookup> InstitutionAccountsLookups { get; set; } = new List<InstitutionAccountsLookup>();
+    public virtual List<AnnualPercentageRate> AnnualPercentageRates { get; set; } = new();
+
+    public virtual Institution Institution { get; set; } = new();
+
+    public virtual List<BtTransaction> btTransactions { get; set; } = new();
 }

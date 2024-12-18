@@ -9,6 +9,7 @@ public static class CountryCodeFactory
     {
         return stateId < (int)TrupStates.AB ? CountryCodeEx.USA : stateId < (int)TrupStates.AU_NSW ? CountryCodeEx.CAN : CountryCodeEx.AUS;
     }
+
     public static CountryCodeEx CountryCodeFromStateId(TrupStates stateCode)
     {
         return CountryCodeFromStateId((int)stateCode);

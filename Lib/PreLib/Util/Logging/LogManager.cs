@@ -25,7 +25,7 @@ public class LogManager : ILogManager, ISingletonSvc
     {
         if (!isInitialized)
         {
-            lock(locker)
+            lock (locker)
             {
                 if (!isInitialized)
                 {
@@ -50,7 +50,7 @@ public class LogManager : ILogManager, ISingletonSvc
     {
         var workToDoEvent = logQueue.ObtainNewEntryEvent();
 
-        while(!exitThread)
+        while (!exitThread)
         {
             var res = workToDoEvent.WaitOne(1000);
             if (res)

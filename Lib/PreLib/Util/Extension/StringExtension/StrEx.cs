@@ -3,7 +3,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Utilities.ArgumentEvaluation;
 using Utilities.Entity;
-using Utilities.ReturnType;
 
 namespace Utilities.Extension.StringExtension;
 
@@ -106,7 +105,7 @@ public static class StrExt
         return !testVal.Any(x => (x < '0' || x > '9'));
     }
 
-    public static string TrimLastCharacter(this String str) => 
+    public static string TrimLastCharacter(this String str) =>
         string.IsNullOrEmpty(str) ? str : str.Remove(str.Length - 1);
 
     /// <summary>

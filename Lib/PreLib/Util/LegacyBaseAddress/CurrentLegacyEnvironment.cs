@@ -10,8 +10,8 @@ public class CurrentLegacyEnvironment : Singleton<CurrentLegacyEnvironment>
 
     public void SetEnvironment(LegacyEnvironment legacyEnvironment)
     {
-        EvaluateArgument.Execute(legacyEnvironment, 
-            fn => LegacyEnvironment.uninitialized != legacyEnvironment && LegacyEnvironment.outofrange != legacyEnvironment, 
+        EvaluateArgument.Execute(legacyEnvironment,
+            fn => LegacyEnvironment.uninitialized != legacyEnvironment && LegacyEnvironment.outofrange != legacyEnvironment,
             "Invalid environment setting");
 
         this.environment = legacyEnvironment;

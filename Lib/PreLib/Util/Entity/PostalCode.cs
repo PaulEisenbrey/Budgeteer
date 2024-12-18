@@ -32,15 +32,15 @@ public class PostalCode : IPostalCode, ITransientSvc
 
     public PostalCode SetCode(string postalCode)
     {
-        EvaluateArgument.Execute(this.countryCodeHelper, 
-            fn => null != countryCodeHelper && this.countryCodeHelper.IsValid, 
+        EvaluateArgument.Execute(this.countryCodeHelper,
+            fn => null != countryCodeHelper && this.countryCodeHelper.IsValid,
             $"Cannot validate postal code for country {this.countryCodeHelper?.Country}");
 
         string regX = this.PostalCodeRegEx(this.countryCodeHelper!.Country);
         var regularExpression = new Regex(regX, RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        EvaluateArgument.Execute(postalCode, 
-            fn => regularExpression.IsMatch(postalCode), 
+        EvaluateArgument.Execute(postalCode,
+            fn => regularExpression.IsMatch(postalCode),
             $"Postal Code {postalCode} does not match rules for {this.countryCodeHelper!.Country}");
 
         this.postalCode = postalCode;
@@ -51,7 +51,7 @@ public class PostalCode : IPostalCode, ITransientSvc
     public static implicit operator string(PostalCode value) => value.Code;
 
     private string PostalCodeRegEx(CountryCode? country) => null != country && country == CountryCode.USA ? StringSpace.ZipCodeStrings.usaRegEx
-        : null != country && country == CountryCode.CAN ? StringSpace.ZipCodeStrings.canRegEx 
-        : null != country && country == CountryCode.AUS ? StringSpace.ZipCodeStrings.ausRegEx 
+        : null != country && country == CountryCode.CAN ? StringSpace.ZipCodeStrings.canRegEx
+        : null != country && country == CountryCode.AUS ? StringSpace.ZipCodeStrings.ausRegEx
         : $"Unable to find postal code regex for country {country?.Description()}";
 }

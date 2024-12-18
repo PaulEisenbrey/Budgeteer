@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-using Database.BaseClasses;
+﻿using Database.BaseClasses;
 using Database.BaseClasses.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Database;
 

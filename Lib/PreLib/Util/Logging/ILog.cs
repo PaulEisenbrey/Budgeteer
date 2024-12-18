@@ -21,5 +21,4 @@ public interface ILog
     void WriteTrace(string message);
 
     void WriteTrace<T>(T exception) where T : Exception;
-
 }

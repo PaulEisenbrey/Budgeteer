@@ -1,9 +1,9 @@
-﻿using Utilities.EntityBaseClasses;
+﻿namespace Database.Models;
 
-namespace Database.Models;
-
-public partial class Address : EntityIntId
+public partial class Address
 {
+    public int Id { get; set; }
+
     public string Street { get; set; } = string.Empty;
 
     public string UnitNumber { get; set; } = string.Empty;

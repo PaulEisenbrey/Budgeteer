@@ -3,6 +3,7 @@
 using Utilities.Entity;
 
 namespace Utilities.Helpers;
+
 public static class Countries
 {
     public const string Unknown = "?";

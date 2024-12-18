@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Globalization;
+﻿using System.Globalization;
 
 using Utilities.ArgumentEvaluation;
 using Utilities.Entity;
@@ -15,6 +14,7 @@ public class CountryHelper
 
     private readonly string usaUnderwriter = "American Pet Insurance Company";
     private readonly string canUnderwriter = "Omega General Insurance Company";
+
     private readonly string ausUnderwriter =
         "Trupanion Pet Insurance is general insurance issued by the insurer The Hollard Insurance Company Pty Ltd " +
         "(ABN 78 090 584 473) (Hollard) is distributed, promoted and administered by Trupanion Australia Pty Ltd " +
@@ -44,11 +44,12 @@ public class CountryHelper
     public string IsoAlpha3ToPhoneMask(string iso3) => (iso3 == Country.Australia.IsoAlpha3Code) ? this.ausPhoneFormat : this.usaPhoneFormat;
 
     public string FormatPhoneNumber(string phone, string iso3) => (iso3 == Country.Australia.IsoAlpha3Code) ? this.FormatPhoneAustralia(phone) : this.FormatPhoneNorthAmerica(phone);
+
     public string CreditPaymentMethodTypeName(string iso3CountryCode, bool useEft)
     {
-        EvaluateArgument.Execute(iso3CountryCode, fn => 
-           Country.UnitedStatesOfAmerica.IsoAlpha3Code == iso3CountryCode 
-        || Country.Canada.IsoAlpha3Code == iso3CountryCode 
+        EvaluateArgument.Execute(iso3CountryCode, fn =>
+           Country.UnitedStatesOfAmerica.IsoAlpha3Code == iso3CountryCode
+        || Country.Canada.IsoAlpha3Code == iso3CountryCode
         || Country.Australia.IsoAlpha3Code == iso3CountryCode,
         $"Invalid country code {iso3CountryCode}");
 
@@ -70,10 +71,10 @@ public class CountryHelper
             : Country.Australia.IsoAlpha3Code;
     }
 
-    public string IsoAlpha3ToZipCodeName(string iso3) => 
+    public string IsoAlpha3ToZipCodeName(string iso3) =>
         iso3.ToUpper().Equals(Country.UnitedStatesOfAmerica.IsoAlpha3Code) ? "Zip Code"
             : iso3.ToUpper().Equals(Country.Canada.IsoAlpha3Code) ? "Postal Code"
-            : iso3.ToUpper().Equals(Country.Australia.IsoAlpha3Code) ? "Post Code" 
+            : iso3.ToUpper().Equals(Country.Australia.IsoAlpha3Code) ? "Post Code"
             : this.Unknown;
 
     public int IsoAlpha3ToZipCodeLength(string iso3) =>

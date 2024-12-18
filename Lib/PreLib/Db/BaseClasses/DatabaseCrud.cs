@@ -1,7 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Database.BaseClasses.Interfaces;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using Database.BaseClasses.Interfaces;
 using Utilities.ArgumentEvaluation;
 using Utilities.Logging;
 using Utilities.ReturnType;
@@ -10,7 +10,9 @@ namespace Database.BaseClasses;
 
 public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
 {
-    public DatabaseCrud(ILogManager logMgr) : base(logMgr){}
+    public DatabaseCrud(ILogManager logMgr) : base(logMgr)
+    {
+    }
 
     public virtual async Task<ReturnValue<int>> CreateAsync<T, C>(T entity, C? context = null)
         where T : class, new()

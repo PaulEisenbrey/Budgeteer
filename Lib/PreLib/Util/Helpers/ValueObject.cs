@@ -39,7 +39,7 @@ public abstract class ValueObject<T> : IEquatable<T> where T : ValueObject<T>
         {
             var rhsValue = fieldInfo.GetValue(other);
             var lhsValue = fieldInfo.GetValue(this);
-            
+
             if ((null == rhsValue && null != lhsValue) || !rhsValue!.Equals(lhsValue))
             {
                 return false;

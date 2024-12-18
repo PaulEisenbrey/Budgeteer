@@ -1,6 +1,6 @@
 ﻿namespace Budgeteer.Constants
 {
-    public enum TransactionType
+    public enum BtTransactionType
     {
         unintialized = 0,
         atmWithdrawl = 1,

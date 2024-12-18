@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
-using Utilities.Entity;
+﻿using Utilities.Entity;
 using Utilities.Helpers;
 
 namespace Utilities.Conversion;
+
 public static class CountryUtilities
 {
     public const string Unknown = "?";
@@ -33,28 +33,28 @@ public static class CountryUtilities
     public static string FormatPhoneNumber(string phone, string iso3) =>
         (iso3 == Country.Australia.IsoAlpha3Code) ? FormatPhoneAustralia(phone) : FormatPhoneNorthAmerica(phone);
 
-//     public static string CreditPaymentMethodTypeName(string iso3CountryCode, bool useEft)
-//     {
-//         string result;
-//         if (iso3CountryCode == Country.UnitedStatesOfAmerica.IsoAlpha3Code)
-//         {
-//             result = (useEft ? "ACH" : "Check");
-//         }
-//         else if (iso3CountryCode == Country.Canada.IsoAlpha3Code)
-//         {
-//             result = (useEft ? "EFT" : "Check");
-//         }
-//         else if (iso3CountryCode == Country.Australia.IsoAlpha3Code)
-//         {
-//             result = (useEft ? "EFT" : "Check");
-//         }
-//         else
-//         {
-//             result = "Unsupported Country";
-//         }
-// 
-//         return result;
-//     }
+    //     public static string CreditPaymentMethodTypeName(string iso3CountryCode, bool useEft)
+    //     {
+    //         string result;
+    //         if (iso3CountryCode == Country.UnitedStatesOfAmerica.IsoAlpha3Code)
+    //         {
+    //             result = (useEft ? "ACH" : "Check");
+    //         }
+    //         else if (iso3CountryCode == Country.Canada.IsoAlpha3Code)
+    //         {
+    //             result = (useEft ? "EFT" : "Check");
+    //         }
+    //         else if (iso3CountryCode == Country.Australia.IsoAlpha3Code)
+    //         {
+    //             result = (useEft ? "EFT" : "Check");
+    //         }
+    //         else
+    //         {
+    //             result = "Unsupported Country";
+    //         }
+    //
+    //         return result;
+    //     }
 
     public static string CountryToIsoAlpha3Code(string country)
     {

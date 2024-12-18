@@ -3,9 +3,10 @@ using Utilities.Entity;
 using Utilities.Extension.StringExtension;
 
 namespace Utilities.Helpers;
+
 public static class PostalCodeValidation
 {
-    private static readonly List<string> countries = new List<string> { "USA", "CAN", "AUS"};
+    private static readonly List<string> countries = new List<string> { "USA", "CAN", "AUS" };
 
     public static bool IsZip(string input)
     {

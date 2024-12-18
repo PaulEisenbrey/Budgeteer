@@ -1,28 +1,26 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Database.BaseClasses.Interfaces;
+using Database.Context;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Transactions;
-
-using Database.BaseClasses.Interfaces;
 using Utilities;
 using Utilities.IoCInterfaces;
 using Utilities.Logging;
 using Utilities.ReturnType;
-using Database.Context;
-using Microsoft.Extensions.Options;
 
 namespace Database.BaseClasses;
 
 public class ContextGenerator : IContextGenerator, ISingletonSvc
 {
     private readonly ILogManager logManager;
+
     public ContextGenerator(ILogManager logMgr)
     {
-
         this.logManager = logMgr;
         this.Logger = logManager.GenerateLogger();
     }
 
-    public BudgeteerContext GenerateBudgeteerContext() => new BudgeteerContext(new DbContextOptions <BudgeteerContext>());
+    public BudgeteerContext GenerateBudgeteerContext() => new BudgeteerContext(new DbContextOptions<BudgeteerContext>());
 
     protected ILog? Logger { get; private set; }
 

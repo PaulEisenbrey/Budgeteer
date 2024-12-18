@@ -17,5 +17,4 @@ public class RotatingRiderA : RotatingValueBase<bool>, IRotatingValue<bool>, IRo
     {
         return RotatorType.RiderA == rt;
     }
-
 }

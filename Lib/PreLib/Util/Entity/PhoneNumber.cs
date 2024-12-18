@@ -44,7 +44,7 @@ public class PhoneNumber : IFormattable
         return true;
     }
 
-    public static ReturnValue<PhoneNumber> Create(string phoneNumber) => 
+    public static ReturnValue<PhoneNumber> Create(string phoneNumber) =>
         TryParse(phoneNumber, out PhoneNumber? result)
         ? ReturnValue<PhoneNumber>.From(result!)
         : ReturnValue<PhoneNumber>.FromError($"Invalid Phone Number {phoneNumber}");
@@ -93,7 +93,7 @@ public class PhoneNumber : IFormattable
 
             return ReturnValue<string>.FromError($"{proposedPhoneNumber} is an invalid phone number");
         }
-        catch(ArgumentException aex)
+        catch (ArgumentException aex)
         {
             return ReturnValue<string>.FromError(aex);
         }
@@ -109,7 +109,6 @@ public class PhoneNumber : IFormattable
     }
 
     public static implicit operator PhoneNumber(string? value) => !string.IsNullOrEmpty(value) ? new PhoneNumber(value) : new PhoneNumber("4257779999");
-
 
     private static string RemoveOnePrefixIfApplicable(string telephoneNumber)
     {

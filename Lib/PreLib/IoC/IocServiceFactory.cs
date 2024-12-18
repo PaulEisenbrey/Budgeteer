@@ -1,9 +1,7 @@
-﻿using System.Diagnostics;
-
+﻿using Database.BaseClasses.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
-using Database.BaseClasses.Interfaces;
+using System.Diagnostics;
 using Utilities;
 using Utilities.ArgumentEvaluation;
 using Utilities.IoCInterfaces;
@@ -17,7 +15,6 @@ public class IocServiceFactory : Singleton<IocServiceFactory>, IDisposable
 
     protected IocServiceFactory()
     {
-
     }
 
     public void Initialize()
@@ -49,7 +46,6 @@ public class IocServiceFactory : Singleton<IocServiceFactory>, IDisposable
                             .AsMatchingInterface()
                                 .WithScopedLifetime()
                                 );
-                        
                     }).Build();
 
                     LibraryIocHost.Initialize(_host);
@@ -67,7 +63,7 @@ public class IocServiceFactory : Singleton<IocServiceFactory>, IDisposable
             EvaluateArgument.Execute(_host, fn => null != _host, "Host is not initialized");
             return this._host!.Services.GetService<T>();
         }
-        catch(InvalidOperationException ioEx)
+        catch (InvalidOperationException ioEx)
         {
             Debug.WriteLine($"{ioEx.Message}. {ioEx.InnerException}");
         }

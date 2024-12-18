@@ -8,6 +8,7 @@ namespace Utilities.Entity.Interfaces
         string Code { get; }
 
         PostalCode SetCode(string postalCode);
+
         PostalCode SetCountry(CountryCode countryCode);
     }
 }

@@ -24,8 +24,8 @@ public static class DumpObjectValues
 
         string path = "objectValues.txt";
         string text = ((obj == null) ? "NULL" : obj.GetType().ToString());
-        string text2 = "=====================[ Field Dump (" + text + ") ]============================\r\n " 
-            + stringBuilder.ToString() 
+        string text2 = "=====================[ Field Dump (" + text + ") ]============================\r\n "
+            + stringBuilder.ToString()
             + "=====================[ End Dump ]=============================\r\n";
 
         using (FileStream fileStream = File.Open(path, FileMode.OpenOrCreate))

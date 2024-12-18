@@ -62,8 +62,8 @@ public class Currency : ValueObject<Currency>
 
     public static Currency From(string isoCurrencySymbol)
     {
-        EvaluateArgument.Execute(isoCurrencySymbol, 
-            fn => !isoCurrencySymbol.ContainsWhiteSpace(), 
+        EvaluateArgument.Execute(isoCurrencySymbol,
+            fn => !isoCurrencySymbol.ContainsWhiteSpace(),
             $"Parameter {isoCurrencySymbol} cannot have whitespace");
 
         if (!Currencies.TryGetValue(isoCurrencySymbol, out var value))

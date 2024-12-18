@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-using Utilities.ArgumentEvaluation;
+﻿using Utilities.ArgumentEvaluation;
 using Utilities.Constants.Enum;
 using Utilities.Extension;
 
@@ -13,7 +11,7 @@ public static class LegacyServiceBaseAddress
     public static string ServiceBaseAddress(LegacyService service, bool isHttps = false)
     {
         EvaluateArgument.Execute(env, fn => null != env, "Invalid environment setting.");
-        EvaluateArgument.Execute(service, fn => LegacyService.outofrance != service && LegacyService.uninitialized != service, 
+        EvaluateArgument.Execute(service, fn => LegacyService.outofrance != service && LegacyService.uninitialized != service,
             "Invalid Service Request.");
 
         var httpStr = isHttps ? "https" : "http";

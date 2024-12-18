@@ -5,12 +5,16 @@ public enum Platform
     TrupanionSite = 1,
     PetOrganizer,
     PureBreedBreederService,
+
     [Obsolete]
     ExtendCreditWellnessPortal,
+
     TREXService,
     CrmService,
+
     [Obsolete]
     Mobile,
+
     PetNavigator,
     RateAdjustmentService,
     RateTool,

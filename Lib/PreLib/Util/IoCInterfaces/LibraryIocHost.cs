@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using System.Diagnostics;
 using Utilities.ArgumentEvaluation;
 
 namespace Utilities.IoCInterfaces;
@@ -39,6 +37,5 @@ public static class LibraryIocHost
     {
         EvaluateArgument.Execute(_host, fn => null != _host, "Host is not initialized");
         return _host!.Services.GetServices<T>();
-
     }
 }

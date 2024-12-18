@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Utilities.EntityBaseClasses;
+﻿namespace Database.Models;
 
-namespace Database.Models;
-
-public partial class AnnualPercentageRate : EntityIntId
+public partial class AnnualPercentageRate
 {
-    public decimal Apr { get; set; } = 0.0m;
+    public int Id { get; set; }
+
+    public int AccountDatumId { get; set; }
+
+    public decimal Apr { get; set; }
 
     public DateTime EffectiveDate { get; set; }
 
-    public virtual List<AccountAprlookup> AccountAprlookups { get; set; } = new();
+    public virtual AccountDatum AccountDatum { get; set; } = new();
 }

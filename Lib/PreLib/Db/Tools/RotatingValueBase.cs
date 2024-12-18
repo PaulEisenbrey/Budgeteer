@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-
-using Utilities.ArgumentEvaluation;
+﻿using Utilities.ArgumentEvaluation;
 using Utilities.Constants.Enum;
 using Utilities.Logging;
 using Utilities.Tools.Interfaces;

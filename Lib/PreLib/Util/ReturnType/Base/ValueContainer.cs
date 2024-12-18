@@ -20,7 +20,9 @@ public class ValueContainer<T>
     public static implicit operator T(ValueContainer<T>? value) => value ?? null;
 
     public static implicit operator ValueContainer<T>(T value) => new ValueContainer<T>(value);
+
     public T? Value => value.ValueOrDefault;
+
     protected void SetValidation(Func<T?, bool> validationFunc) =>
         Validation = validationFunc ?? throw new ArgumentNullException(nameof(validationFunc));
 }

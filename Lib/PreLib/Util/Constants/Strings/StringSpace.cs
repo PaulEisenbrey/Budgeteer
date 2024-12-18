@@ -1,45 +1,10 @@
-﻿using System.Text.RegularExpressions;
-
-namespace Utilities.Constants.Strings;
+﻿namespace Utilities.Constants.Strings;
 
 public static class StringSpace
 {
     public static class ConnectionStrings
     {
-        public static string TruDatConnection => "TruDatConnectionString";
-
-        public static string TestDataConnection => "TestDataConnectionString";
-
-
-        public static string BillingConnection = "BillingConnectionString";
-
-        public static string CommServicesConnection => "CommServicesConnectionString";
-
-        public static string ClaimsConnection => "ClaimsConnectionString";
-
-        public static string EnterpriseCatalogConnection => "EnterpriseCatalogConnectionString";
-
-        public static string Geography2Connection => "Geography2ConnectionString";
-
-        public static string ProductConnection => "ProductConnectionString";
-
-        public static string AquariumClaimsConnection => "AquariumClaimsConnectionString";
-
-        public static string AquariumPolicyConnection => "AquariumPolicyConnectionString";
-
-        public static string AquariumPolicyQuoteConnection => "AquariumPolicyQuoteConnectionString";
-
-        public static string AquariumPolicyInteractionConnection => "AquariumPolicyInteractionConnectionString";
-
-        public static string AquariumPolicyPaymentConnection => "AquariumPolicyPaymentsConnectionString";
-
-        public static string AquariumPolicyNotesConnection => "AquariumPolicyNotesConnectionString";
-
-        public static string ReportingConnection => "ReportingConnectionString";
-
-        public static string VisionMigrationConnection => "VisionMigrationConnectionString";
-
-        public static string CLUConnection => "CluConnectionString";
+        public static string BudgeteerConnection => "Budgeteer";
     }
 
     public static class AppSettings
@@ -70,8 +35,10 @@ public static class StringSpace
     public static class MessageProperties
     {
         public const string OriginalPublishTopic = "OriginalPublishTopic";
+
         // Left as "TriggeringMessageId" for backwards compatibility.
         public const string ParentMessageId = "TriggeringMessageId";
+
         public const string OriginatingUserId = "OriginatingUserId";
         public const string RetryCustomStatus = "__RetryCustomstatus__";
     }
@@ -80,6 +47,7 @@ public static class StringSpace
     {
         public const string ModifyBillingUser = "f13f3bd42be940d68e77077f498b48d9:JL1NDT";
     }
+
     public static class HttpHeaders
     {
         public const string TrupanionUser = "x-trupanion-user";
