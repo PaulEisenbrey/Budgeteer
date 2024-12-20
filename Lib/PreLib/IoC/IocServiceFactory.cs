@@ -36,7 +36,7 @@ public class IocServiceFactory : Singleton<IocServiceFactory>, IDisposable
                     .ConfigureServices((context, services) =>
                     {
                         services.Scan(t => t.FromApplicationDependencies()
-                        .AddClasses(t => t.AssignableTo<IQaLibCrud>())
+                        .AddClasses(t => t.AssignableTo<IDatabaseCrud>())
                             .AsMatchingInterface()
                                 .WithTransientLifetime()
                         .AddClasses(t => t.AssignableTo<ISingletonSvc>())

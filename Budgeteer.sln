@@ -11,6 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyUtilities", "Lib\PreLib\U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Lib\PreLib\Db\Database.csproj", "{17EB6835-AA6E-409E-9D87-BBF6142B3D46}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "BudgetDb", "BudgetDb\BudgetDb.sqlproj", "{3B4E7129-06F6-4A8A-B1C0-94A88DCC984F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6998BC9B-5078-4661-BAA7-7C30E1117CD6}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +40,12 @@ Global
 		{17EB6835-AA6E-409E-9D87-BBF6142B3D46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17EB6835-AA6E-409E-9D87-BBF6142B3D46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17EB6835-AA6E-409E-9D87-BBF6142B3D46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B4E7129-06F6-4A8A-B1C0-94A88DCC984F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B4E7129-06F6-4A8A-B1C0-94A88DCC984F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B4E7129-06F6-4A8A-B1C0-94A88DCC984F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{3B4E7129-06F6-4A8A-B1C0-94A88DCC984F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B4E7129-06F6-4A8A-B1C0-94A88DCC984F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B4E7129-06F6-4A8A-B1C0-94A88DCC984F}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

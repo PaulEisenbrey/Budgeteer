@@ -7,6 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Trupanion\**" />
+    <EmbeddedResource Remove="Trupanion\**" />
+    <None Remove="Trupanion\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Helpers\CharacteristicAccess.cs" />
+    <Compile Remove="Helpers\Interfaces\ICharacteristicAccess.cs" />
+    <Compile Remove="Helpers\LocationsCache.cs" />
+    <Compile Remove="Tools\Interfaces\IRotatingBreed.cs" />
+    <Compile Remove="Tools\RotatingBreed.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.5.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
@@ -25,11 +40,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Trupanion\Crud\BaseClasses\" />
+    <ProjectReference Include="..\Util\MyUtilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Util\MyUtilities.csproj" />
+    <Folder Include="Containers\" />
+    <Folder Include="Helpers\Interfaces\" />
   </ItemGroup>
 
 </Project>
