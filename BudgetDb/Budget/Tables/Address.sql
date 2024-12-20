@@ -5,7 +5,7 @@
     [City]       NVARCHAR (100) NULL,
     [State]      NVARCHAR (100) NULL,
     [PostalCode] NVARCHAR (40)  NULL,
-    [Country]    NVARCHAR (10)  NULL,
+    IsActive     BIT DEFAULT ((1)) NOT NULL,
     CONSTRAINT [PK_Address] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

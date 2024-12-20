@@ -21,4 +21,6 @@ public partial class Institution : EntityIntId
     public virtual Address Address { get; set; } = new();
 
     public virtual List<InstitutionAccountsLookup> InstitutionAccountsLookups { get; set; } = new();
+
+    public bool IsActive { get; set; }
 }

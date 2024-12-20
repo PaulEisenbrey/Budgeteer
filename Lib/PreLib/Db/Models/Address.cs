@@ -16,5 +16,7 @@ public partial class Address : EntityIntId
 
     public string Country { get; set; } = string.Empty;
 
-    public virtual List<Institution> Institutions { get; set; } = new();
+    public bool IsActive { get; set; }
+
+	public virtual List<Institution> Institutions { get; set; } = new();
 }

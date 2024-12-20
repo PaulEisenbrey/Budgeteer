@@ -7,7 +7,11 @@ namespace Database.Context;
 
 public partial class BudgeteerContext : DbContext
 {
-    public BudgeteerContext(DbContextOptions<BudgeteerContext> options)
+    public BudgeteerContext() : base()
+	{
+	}
+
+	public BudgeteerContext(DbContextOptions<BudgeteerContext> options)
         : base(options)
     {
     }

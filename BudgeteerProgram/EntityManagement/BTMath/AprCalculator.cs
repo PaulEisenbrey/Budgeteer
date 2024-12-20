@@ -1,12 +1,11 @@
-﻿namespace Budgeteer.BTMath
+﻿namespace Budgeteer.EntityManagement.BTMath
 {
     public static class AprCalculator
     {
         public static decimal CalculateAprAmount(decimal principal, decimal apr, DateTime dtPeriod) =>
             principal * ((apr / 365) * DateTime.DaysInMonth(dtPeriod.Year, dtPeriod.Month));
 
-
-        public static List<(int pmtNo, DateTime pmtDate, decimal payment, decimal principal, decimal interest, decimal remainingBalance)> 
+        public static List<(int pmtNo, DateTime pmtDate, decimal payment, decimal principal, decimal interest, decimal remainingBalance)>
             CalculateLoanAmortization(DateTime startDate, decimal apr, decimal loanAmount, decimal payment)
         {
             List<(int pmtNo, DateTime pmtDate, decimal payment, decimal principal, decimal interest, decimal remainingBalance)> loanAmortization = new();
@@ -31,7 +30,7 @@
                 pmtDate = pmtDate.AddMonths(1);
 
                 // check for end of loan
-                if(remainingBalance <= payment)
+                if (remainingBalance <= payment)
                 {
                     loanAmortization.Add((pmtNum++, startDate, remainingBalance, remainingBalance, 0, 0));
                     break;

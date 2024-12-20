@@ -9,9 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Factories\" />
-    <Folder Include="Helpers\" />
-    <Folder Include="Serializers\" />
+    <Folder Include="EntityManagement\Factories\" />
+    <Folder Include="EntityManagement\Helpers\" />
+    <Folder Include="EntityManagement\Serializers\" />
   </ItemGroup>
 
   <ItemGroup>

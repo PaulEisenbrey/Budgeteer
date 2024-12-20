@@ -62,7 +62,7 @@ public class ContextGenerator : IContextGenerator, ISingletonSvc
         return new T();
     }
 
-    protected T EnsureContext<T>(T? ctx) where T : DbContext, new() => ctx ?? new T();
+    protected T EnsureContext<T>(T? ctx) where T : class, new() => ctx ?? new T();
 
     protected int RegionIdFromStateCode(string state)
     {

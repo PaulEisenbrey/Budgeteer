@@ -12,21 +12,25 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
 {
     public DatabaseCrud(ILogManager logMgr) : base(logMgr){}
 
-    public virtual async Task<ReturnValue<int>> CreateAsync<T, C>(T entity, C? context = null)
+    public virtual async Task<ReturnValue<int>> CreateAsync<T, C>(T entity, C? context)
         where T : class, new()
-        where C : DbContext, new()
+        where C : class, new()
     {
         try
         {
             EvaluateArgument.Execute(entity, fn => null != entity, $"Creation Failure: {typeof(T)} cannot be null");
 
             var ctx = this.EnsureContext(context);
+            if (ctx is DbContext dbCtx)
+            {
+                await dbCtx.Set<T>().AddAsync(entity).ConfigureAwait(false);
+                var numChangesSaved = await dbCtx.SaveChangesAsync().ConfigureAwait(false);
 
-            await ctx.Set<T>().AddAsync(entity).ConfigureAwait(false);
-            var numChangesSaved = await ctx.SaveChangesAsync().ConfigureAwait(false);
+                return ReturnValue<int>.From(numChangesSaved);
+            }
 
-            return ReturnValue<int>.From(numChangesSaved);
-        }
+            throw new Exception($"Creation Failure: {typeof(C)} is not a valid DbContext");
+		}
         catch (SqlException sqex)
         {
             Logger?.WriteError(sqex);
@@ -39,21 +43,24 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
         }
     }
 
-    public virtual async Task<ReturnValue<int>> CreateManyAsync<T, C>(IEnumerable<T> entities, C? context = null)
+    public virtual async Task<ReturnValue<int>> CreateManyAsync<T, C>(IEnumerable<T> entities, C? context)
         where T : class, new()
-        where C : DbContext, new()
+        where C : class, new()
     {
         try
         {
             EvaluateArgument.Execute(entities, fn => 0 < entities.Count(), $"Creation Failure: List of {typeof(T)} cannot be empty");
 
             var ctx = this.EnsureContext(context);
+            if (ctx is DbContext dbCtx)
+			{
+				await dbCtx.Set<T>().AddRangeAsync(entities).ConfigureAwait(false);
+				var numChangesSaved = await dbCtx.SaveChangesAsync().ConfigureAwait(false);
+				return ReturnValue<int>.From(numChangesSaved);
+			}
 
-            await ctx.Set<T>().AddRangeAsync(entities).ConfigureAwait(false);
-            var numChangesSaved = await ctx.SaveChangesAsync().ConfigureAwait(false);
-
-            return ReturnValue<int>.From(numChangesSaved);
-        }
+			throw new Exception($"Creation Failure: {typeof(C)} is not a valid DbContext");
+		}
         catch (SqlException sqex)
         {
             Logger?.WriteError(sqex);
@@ -66,19 +73,24 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
         }
     }
 
-    public virtual async Task<ReturnValue<T>> RetrieveByIdAsync<T, IdType, C>(IdType id, C? context = null)
+    public virtual async Task<ReturnValue<T>> RetrieveByIdAsync<T, IdType, C>(IdType id, C? context)
         where T : class, new()
         where IdType : IConvertible
-        where C : DbContext, new()
+        where C : class, new()
     {
         try
         {
-            var entity = await this.EnsureContext(context).FindAsync<T>(id).ConfigureAwait(false);
+            var ctx = this.EnsureContext(context);
+			if (ctx is DbContext dbCtx)
+			{
+				var entity = await dbCtx.FindAsync<T>(id).ConfigureAwait(false);
+				return null == entity
+					? ReturnValue<T>.FromError($"Unable to find {typeof(T)} record by id {id}")
+					: ReturnValue<T>.From(entity);
+			}
 
-            return null == entity
-                ? ReturnValue<T>.FromError($"Unable to find {typeof(T)} record by id {id}")
-                : ReturnValue<T>.From(entity);
-        }
+			throw new Exception($"Retrieve Failure: {typeof(C)} is not a valid DbContext");
+		}
         catch (SqlException sqex)
         {
             Logger?.WriteError(sqex);
@@ -91,18 +103,23 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
         }
     }
 
-    public async Task<ReturnValue<List<T>>> RetrieveManyByQueryAsync<T, C>(Expression<Func<T, bool>> predicate, C? context = null)
-        where C : DbContext, new()
+    public async Task<ReturnValue<List<T>>> RetrieveManyByQueryAsync<T, C>(Expression<Func<T, bool>> predicate, C? context)
+        where C : class, new()
         where T : class, new()
     {
         try
         {
-            var entity = await this.EnsureContext(context).Set<T>().Where(predicate).ToListAsync().ConfigureAwait(false);
+            var ctx = this.EnsureContext(context);
+			if (ctx is DbContext dbCtx)
+			{
+				var entity = await dbCtx.Set<T>().Where(predicate).ToListAsync().ConfigureAwait(false);
+				return null == entity
+					? ReturnValue<List<T>>.FromError($"Unable to find {typeof(T)} record")
+					: ReturnValue<List<T>>.From(entity);
+			}
 
-            return null == entity
-                ? ReturnValue<List<T>>.FromError($"Unable to find {typeof(T)} record")
-                : ReturnValue<List<T>>.From(entity);
-        }
+			throw new Exception($"Retrieve Failure: {typeof(C)} is not a valid DbContext");
+		}
         catch (SqlException sqex)
         {
             Logger?.WriteError(sqex);
@@ -115,18 +132,23 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
         }
     }
 
-    public async Task<ReturnValue<T>> RetrieveByQueryAsync<T, C>(Expression<Func<T, bool>> predicate, C? context = null)
-        where C : DbContext, new()
+    public async Task<ReturnValue<T>> RetrieveByQueryAsync<T, C>(Expression<Func<T, bool>> predicate, C? context)
+        where C : class, new()
         where T : class, new()
     {
         try
         {
-            var entity = await this.EnsureContext(context).Set<T>().FirstOrDefaultAsync(predicate).ConfigureAwait(false);
+			var ctx = this.EnsureContext(context);
+			if (ctx is DbContext dbCtx)
+			{
+				var entity = await dbCtx.Set<T>().FirstOrDefaultAsync(predicate).ConfigureAwait(false);
+				return null == entity
+					? ReturnValue<T>.FromError($"Unable to find {typeof(T)} record")
+					: ReturnValue<T>.From(entity);
+			}
 
-            return null == entity
-                ? ReturnValue<T>.FromError($"Unable to find {typeof(T)} record")
-                : ReturnValue<T>.From(entity);
-        }
+			throw new Exception($"Retrieve Failure: {typeof(C)} is not a valid DbContext");
+		}
         catch (SqlException sqex)
         {
             Logger?.WriteError(sqex);
@@ -139,21 +161,24 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
         }
     }
 
-    public virtual async Task<ReturnValue<List<T>>> RetrieveManyByIdsAsync<T, IdType, C>(IEnumerable<IdType> ids, C? context = null)
+    public virtual async Task<ReturnValue<List<T>>> RetrieveManyByIdsAsync<T, IdType, C>(IEnumerable<IdType> ids, C? context)
         where T : class, new()
         where IdType : IConvertible
-        where C : DbContext, new()
+        where C : class, new()
     {
         try
         {
-            var entities = await this.EnsureContext(context).FindAsync<IEnumerable<T>>(ids).ConfigureAwait(false);
+            var ctx = this.EnsureContext(context);
+            if (ctx is DbContext dbCtx)
+			{
+				var entities = await dbCtx.FindAsync<IEnumerable<T>>(ids).ConfigureAwait(false);
+				return null == entities || 0 == entities.Count()
+					? ReturnValue<List<T>>.FromError($"Unable to find {typeof(T)} records")
+					: ReturnValue<List<T>>.From(entities.ToList());
+			}
 
-            _ = entities ?? throw new Exception($"Received NULL response from query into {typeof(T)}");
-
-            return 0 == entities.Count()
-                    ? ReturnValue<List<T>>.FromError($"Unable to find {typeof(T)} records")
-                    : ReturnValue<List<T>>.From(entities.ToList());
-        }
+			throw new Exception($"Retrieve Failure: {typeof(C)} is not a valid DbContext");
+		}
         catch (SqlException sqex)
         {
             Logger?.WriteError(sqex);
@@ -166,18 +191,24 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
         }
     }
 
-    public virtual async Task<ReturnValue<List<T>>> RetrieveAllAsync<T, C>(C? context = null)
+    public virtual async Task<ReturnValue<List<T>>> RetrieveAllAsync<T, C>(C? context)
         where T : class, new()
-        where C : DbContext, new()
+        where C : class, new()
     {
         try
         {
-            var entities = await this.EnsureContext(context).Set<T>().ToListAsync().ConfigureAwait(false);
+			var ctx = this.EnsureContext(context);
 
-            return 0 == entities.Count()
-                ? ReturnValue<List<T>>.FromError($"Unable to find {typeof(T)} records")
-                : ReturnValue<List<T>>.From(entities);
-        }
+			if (ctx is DbContext dbCtx)
+			{
+				var entities = await dbCtx.Set<T>().ToListAsync().ConfigureAwait(false);
+				return 0 == entities.Count()
+					? ReturnValue<List<T>>.FromError($"Unable to find {typeof(T)} records")
+					: ReturnValue<List<T>>.From(entities);
+			}
+
+			throw new Exception($"Retrieve Failure: {typeof(C)} is not a valid DbContext");
+		}
         catch (SqlException sqex)
         {
             Logger?.WriteError(sqex);
@@ -190,18 +221,24 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
         }
     }
 
-    public virtual ReturnValue<List<T>> RetrieveAll<T, C>(C? context = null)
+    public virtual ReturnValue<List<T>> RetrieveAll<T, C>(C? context)
         where T : class, new()
-        where C : DbContext, new()
+        where C : class, new()
     {
         try
         {
-            var entities = this.EnsureContext(context).Set<T>().ToList();
+            var ctx = this.EnsureContext(context);
 
-            return 0 == entities.Count()
-                ? ReturnValue<List<T>>.FromError($"Unable to find {typeof(T)} records")
-                : ReturnValue<List<T>>.From(entities);
-        }
+            if (ctx is DbContext dbCtx)
+			{
+				var entities = dbCtx.Set<T>().ToList();
+				return 0 == entities.Count()
+					? ReturnValue<List<T>>.FromError($"Unable to find {typeof(T)} records")
+					: ReturnValue<List<T>>.From(entities);
+			}
+			
+            throw new($"Retrieve Failure: {typeof(C)} is not a valid DbContext");
+		}
         catch (SqlException sqex)
         {
             Logger?.WriteError(sqex);
@@ -214,20 +251,27 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
         }
     }
 
-    public virtual async Task<ReturnValue<List<T>>> RetrieveSubSetAsync<T, C>(int skip, int take, C? context = null)
+    public virtual async Task<ReturnValue<List<T>>> RetrieveSubSetAsync<T, C>(int skip, int take, C? context)
         where T : class, new()
-        where C : DbContext, new()
+        where C : class, new()
     {
         EvaluateArgument.Execute(skip, fn => 0 <= skip, $"Skip Value {skip} must be zero or greater");
         EvaluateArgument.Execute(take, fn => 0 <= take, $"Take Value {take} must be zero or greater");
+
         try
         {
-            var entities = await this.EnsureContext(context).Set<T>().Skip(skip).Take(take).ToListAsync().ConfigureAwait(false);
+			var ctx = this.EnsureContext(context);
 
-            return 0 == entities.Count()
-                ? ReturnValue<List<T>>.FromError($"Unable to find {typeof(T)} records")
-                : ReturnValue<List<T>>.From(entities);
-        }
+			if (ctx is DbContext dbCtx)
+			{
+				var entities = await dbCtx.Set<T>().Skip(skip).Take(take).ToListAsync().ConfigureAwait(false);
+				return 0 == entities.Count()
+					? ReturnValue<List<T>>.FromError($"Unable to find {typeof(T)} records")
+					: ReturnValue<List<T>>.From(entities);
+			}
+
+			throw new($"Retrieve Failure: {typeof(C)} is not a valid DbContext");
+		}
         catch (SqlException sqex)
         {
             Logger?.WriteError(sqex);
@@ -240,7 +284,7 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
         }
     }
 
-    public virtual async Task<ReturnValue<int>> UpdateAsync<T, C>(T entity, C? context = null) where T : class, new() where C : DbContext, new()
+    public virtual async Task<ReturnValue<int>> UpdateAsync<T, C>(T entity, C? context) where T : class, new() where C : class, new()
     {
         try
         {
@@ -248,16 +292,21 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
 
             var ctx = this.EnsureContext(context);
 
-            var entityPrime = ctx.Set<T>().Update(entity);
-            if (null == entityPrime)
+            if (ctx is DbContext dbCtx)
             {
-                throw new Exception($"Update Failure for {typeof(T)}");
+                var entityPrime = dbCtx.Set<T>().Update(entity);
+                if (null == entityPrime)
+                {
+                    throw new Exception($"Update Failure for {typeof(T)}");
+                }
+
+                var numChangesSaved = await dbCtx.SaveChangesAsync().ConfigureAwait(false);
+
+                return ReturnValue<int>.From(numChangesSaved);
             }
 
-            var numChangesSaved = await ctx.SaveChangesAsync().ConfigureAwait(false);
-
-            return ReturnValue<int>.From(numChangesSaved);
-        }
+			throw new Exception($"Update Failure: {typeof(C)} is not a valid DbContext");
+		}
         catch (SqlException sqex)
         {
             Logger?.WriteError(sqex);
@@ -270,7 +319,7 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
         }
     }
 
-    public virtual async Task<ReturnValue<int>> UpdateManyAsync<T, C>(IEnumerable<T> entities, C? context = null) where T : class, new() where C : DbContext, new()
+    public virtual async Task<ReturnValue<int>> UpdateManyAsync<T, C>(IEnumerable<T> entities, C? context) where T : class, new() where C : class, new()
     {
         try
         {
@@ -278,11 +327,15 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
 
             var ctx = this.EnsureContext(context);
 
-            ctx.Set<T>().UpdateRange(entities);
-            var numChangesSaved = await ctx.SaveChangesAsync().ConfigureAwait(false);
+            if (ctx is DbContext dbCtx)
+			{
+				dbCtx.Set<T>().UpdateRange(entities);
+				var numChangesSaved = await dbCtx.SaveChangesAsync().ConfigureAwait(false);
+				return ReturnValue<int>.From(numChangesSaved);
+			}
 
-            return ReturnValue<int>.From(numChangesSaved);
-        }
+            throw new Exception($"Retrieve Failure: {typeof(C)} is not a valid DbContext");
+		}
         catch (SqlException sqex)
         {
             Logger?.WriteError(sqex);
@@ -295,7 +348,7 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
         }
     }
 
-    public virtual async Task<ReturnValue<int>> DeleteAsync<T, C>(T entity, C? context = null) where T : class, new() where C : DbContext, new()
+    public virtual async Task<ReturnValue<int>> DeleteAsync<T, C>(T entity, C? context) where T : class, new() where C : class, new()
     {
         try
         {
@@ -303,16 +356,21 @@ public class DatabaseCrud : ContextGenerator, IDatabaseCrud, IContextGenerator
 
             var ctx = this.EnsureContext(context);
 
-            var entityPrime = ctx.Set<T>().Remove(entity);
-            if (null == entityPrime)
+            if (ctx is DbContext dbCtx)
             {
-                throw new Exception($"Update Failure for {typeof(T)}");
+                var entityPrime = dbCtx.Set<T>().Remove(entity);
+                if (null == entityPrime)
+                {
+                    throw new Exception($"Update Failure for {typeof(T)}");
+                }
+
+                var numChangesSaved = await dbCtx.SaveChangesAsync().ConfigureAwait(false);
+
+                return ReturnValue<int>.From(numChangesSaved);
             }
 
-            var numChangesSaved = await ctx.SaveChangesAsync().ConfigureAwait(false);
-
-            return ReturnValue<int>.From(numChangesSaved);
-        }
+			throw new Exception($"Deletion Failure: {typeof(C)} is not a valid DbContext");
+		}
         catch (SqlException sqex)
         {
             Logger?.WriteError(sqex);
