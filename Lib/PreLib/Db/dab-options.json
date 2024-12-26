@@ -1,0 +1,40 @@
+﻿{
+   "ConnectionStringName": "dab-connection-string",
+   "Dacpac": null,
+   "DatabaseType": 3,
+   "ProjectPath": "D:\\Dev\\C#\\Budgeteer\\Lib\\PreLib\\Db",
+   "Tables": [
+      {
+         "Name": "[Budget].[AccountData]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Budget].[AccountType]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Budget].[Address]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Budget].[AnnualPercentageRate]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Budget].[BudgetCategories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Budget].[Institution]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Budget].[Transaction]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[Budget].[TransactionType]",
+         "ObjectType": 0
+      }
+   ]
+}
