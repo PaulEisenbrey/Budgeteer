@@ -73,5 +73,6 @@
     <Build Include="Budget\Tables\Transaction.sql" />
     <Build Include="Budget\Tables\TransactionType.sql" />
     <Build Include="Security\Budget.sql" />
+    <Build Include="Budget\Tables\PostalCodes.sql" />
   </ItemGroup>
 </Project>

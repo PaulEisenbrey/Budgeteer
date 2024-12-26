@@ -1,5 +1,10 @@
-﻿using Database.Models;
+﻿using System;
+using System.Collections.Generic;
+
+using Database.POCO.Budgeteer;
+
 using Microsoft.EntityFrameworkCore;
+
 using Utilities.ConnectionStringManager.Base;
 using Utilities.Constants.Enum;
 
@@ -7,67 +12,49 @@ namespace Database.Context;
 
 public partial class BudgeteerContext : DbContext
 {
-    public BudgeteerContext() : base()
-	{
-	}
+    public BudgeteerContext()
+    {
+    }
 
-	public BudgeteerContext(DbContextOptions<BudgeteerContext> options)
+    public BudgeteerContext(DbContextOptions<BudgeteerContext> options)
         : base(options)
     {
     }
 
-    public virtual DbSet<AccountAprlookup> AccountAprlookups { get; set; } = default!;
+    public virtual DbSet<AccountDatum> AccountData { get; set; }
 
-    public virtual DbSet<AccountDatum> AccountData { get; set; } = default!;
+    public virtual DbSet<AccountType> AccountTypes { get; set; }
 
-    public virtual DbSet<AccountType> AccountTypes { get; set; } = default!;
+    public virtual DbSet<Address> Addresses { get; set; }
 
-    public virtual DbSet<Address> Addresses { get; set; } = default!;
+    public virtual DbSet<AnnualPercentageRate> AnnualPercentageRates { get; set; }
 
-    public virtual DbSet<AnnualPercentageRate> AnnualPercentageRates { get; set; } = default!;
+    public virtual DbSet<BudgetCategory> BudgetCategories { get; set; }
 
-    public virtual DbSet<Institution> Institutions { get; set; } = default!;
+    public virtual DbSet<Institution> Institutions { get; set; }
 
-    public virtual DbSet<InstitutionAccountsLookup> InstitutionAccountsLookups { get; set; } = default!;
+    public virtual DbSet<Transaction> Transactions { get; set; }
 
-    public virtual DbSet<Transaction> Transactions { get; set; } = default!;
+    public virtual DbSet<TransactionType> TransactionTypes { get; set; }
 
-    public virtual DbSet<TransactionType> TransactionTypes { get; set; } = default!;
+    public virtual DbSet<PostalCode> PostalCodes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseSqlServer(ConnectionString.ConstructConnectionString(SqlDatabase.budgeteer), options => options.EnableRetryOnFailure().CommandTimeout(60));
-        }
+        optionsBuilder.UseSqlServer(ConnectionString.ConstructConnectionString(SqlDatabase.budgeteer), options => options.EnableRetryOnFailure().CommandTimeout(60));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AccountAprlookup>(entity =>
-        {
-            entity.ToTable("AccountAPRLookup", "Budget");
-
-            entity.HasOne(d => d.AccountData).WithMany(p => p.AccountAprlookups)
-                .HasForeignKey(d => d.AccountDataId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AccountAPRLookup_AccountData");
-
-            entity.HasOne(d => d.AnnualPercentageRate).WithMany(p => p.AccountAprlookups)
-                .HasForeignKey(d => d.AnnualPercentageRateId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AccountAPRLookup_AnnualPercentageRate");
-        });
-
         modelBuilder.Entity<AccountDatum>(entity =>
         {
             entity.ToTable("AccountData", "Budget");
 
+            entity.HasIndex(e => e.AccountUniqueId, "UQ_AccountData_AccountUniqueId").IsUnique();
+
             entity.Property(e => e.AccountNumber).HasMaxLength(100);
             entity.Property(e => e.InitialBalance).HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(100);
+            entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Nickname).HasMaxLength(100);
             entity.Property(e => e.OpenDate).HasColumnType("datetime");
             entity.Property(e => e.RoutingNumber).HasMaxLength(100);
@@ -76,6 +63,11 @@ public partial class BudgeteerContext : DbContext
                 .HasForeignKey(d => d.AccountTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_AccountData_AccountType");
+
+            entity.HasOne(d => d.Institution).WithMany(p => p.AccountData)
+                .HasForeignKey(d => d.InstitutionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AccountData_Institution");
         });
 
         modelBuilder.Entity<AccountType>(entity =>
@@ -105,10 +97,22 @@ public partial class BudgeteerContext : DbContext
 
             entity.ToTable("AnnualPercentageRate", "Budget");
 
-            entity.Property(e => e.Apr)
-                .HasColumnType("decimal(18, 2)")
-                .HasColumnName("APR");
+            entity.Property(e => e.APR).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.EffectiveDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.AccountDatum).WithMany(p => p.AnnualPercentageRates)
+                .HasForeignKey(d => d.AccountDatumId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AnnualPercentageRate_AccountDatum");
+        });
+
+        modelBuilder.Entity<BudgetCategory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_BudgetCategoriesR");
+
+            entity.ToTable("BudgetCategories", "Budget");
+
+            entity.Property(e => e.Description).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Institution>(entity =>
@@ -125,28 +129,20 @@ public partial class BudgeteerContext : DbContext
                 .HasConstraintName("FK_Institution_Address");
         });
 
-        modelBuilder.Entity<InstitutionAccountsLookup>(entity =>
-        {
-            entity.ToTable("InstitutionAccountsLookup", "Budget");
-
-            entity.HasOne(d => d.AccountData).WithMany(p => p.InstitutionAccountsLookups)
-                .HasForeignKey(d => d.AccountDataId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AccountData_Lookup");
-
-            entity.HasOne(d => d.Institution).WithMany(p => p.InstitutionAccountsLookups)
-                .HasForeignKey(d => d.InstitutionId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Institution_Lookup");
-        });
-
         modelBuilder.Entity<Transaction>(entity =>
         {
             entity.ToTable("Transaction", "Budget");
 
+            entity.HasIndex(e => e.TransactionId, "UQ_Transaction_TransactionId").IsUnique();
+
             entity.Property(e => e.CheckNumber).HasMaxLength(100);
             entity.Property(e => e.TransactionAmount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.TransactionDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.AccountDatum).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.AccountDatumId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Transaction_AccountDatum");
 
             entity.HasOne(d => d.TransactionType).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.TransactionTypeId)
@@ -158,9 +154,17 @@ public partial class BudgeteerContext : DbContext
         {
             entity.ToTable("TransactionType", "Budget");
 
-            entity.Property(e => e.Description)
-                .IsRequired()
-                .HasMaxLength(50);
+            entity.Property(e => e.Description).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<PostalCode>(entity =>
+        {
+            entity.ToTable("PostalCodes", "Budget");
+
+            entity.Property(e => e.StateProvince).HasMaxLength(10);
+            entity.Property(e => e.City).HasMaxLength(100);
+            entity.Property(e => e.CountryCode).HasMaxLength(10);
+            entity.Property(e => e.PostalCodeValue).HasColumnName("PostalCode").HasMaxLength(10);
         });
 
         OnModelCreatingPartial(modelBuilder);
